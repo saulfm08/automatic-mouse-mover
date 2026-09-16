@@ -1,3 +1,7 @@
 build/
+dist/
 .DS_Store
 *.xcuserstate
+*.certSigningRequest
+*.cer
+*.p12

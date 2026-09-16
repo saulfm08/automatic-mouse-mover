@@ -113,7 +113,16 @@ pmset -g assertions | grep "Automatic Mouse Mover"
 
 - Apple silicon Mac
 - macOS 13 or later (developed and tested on macOS 26)
-- Xcode command line tools (for `swiftc`)
+- Xcode command line tools (for `swiftc`) — only if building from source
+
+## Download
+
+Grab the latest `.dmg` or `.zip` from the
+[Releases page](https://github.com/saulfm08/automatic-mouse-mover/releases),
+open it, and drag the app to Applications.
+
+Releases are signed and notarized by Apple, so they open normally on first
+launch with no security warning.
 
 ## Build and install
 
