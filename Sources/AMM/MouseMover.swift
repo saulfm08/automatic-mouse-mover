@@ -32,6 +32,10 @@ final class MouseMover {
     /// Set while the system is asleep, so we don't fight the display.
     private var isSystemAsleep = false
 
+    /// Keeps the display awake. The cursor nudge alone cannot do this: warping
+    /// does not reset the HID idle clock that the screensaver reads.
+    private let assertion = IdleAssertion()
+
     /// Raised when a nudge is attempted but the cursor does not move —
     /// almost always missing Accessibility permission.
     var onPermissionProblem: (() -> Void)?
@@ -67,6 +71,9 @@ final class MouseMover {
             timer.resume()
             self.timer = timer
         }
+        // Held for as long as the mover is armed, not just around each nudge:
+        // the screensaver can fire at any point between nudges.
+        assertion.acquire()
         log.info("mouse mover started")
     }
 
@@ -75,6 +82,9 @@ final class MouseMover {
             timer?.cancel()
             timer = nil
         }
+        // Releasing on pause is the point of pausing: the user asked us to stop
+        // holding the machine awake.
+        assertion.release()
         // Clear the rate-limit anchor so resuming does not inherit a stale
         // "already nudged recently" from before the pause.
         stateLock.lock()
@@ -196,11 +206,23 @@ final class MouseMover {
         let center = NSWorkspace.shared.notificationCenter
         center.addObserver(forName: NSWorkspace.willSleepNotification,
                            object: nil, queue: .main) { [weak self] _ in
-            self?.queue.async { self?.isSystemAsleep = true }
+            guard let self else { return }
+            self.queue.async { self.isSystemAsleep = true }
+            // The user (or the lid) is putting the machine to sleep. Stop
+            // holding it awake rather than fighting a deliberate sleep.
+            self.assertion.release()
         }
         center.addObserver(forName: NSWorkspace.didWakeNotification,
                            object: nil, queue: .main) { [weak self] _ in
-            self?.queue.async { self?.isSystemAsleep = false }
+            guard let self else { return }
+            self.queue.async {
+                self.isSystemAsleep = false
+                // Re-assert on wake: an assertion does not survive a sleep
+                // cycle in a state we should rely on.
+                if self.timer != nil {
+                    self.assertion.acquire()
+                }
+            }
         }
     }
 }

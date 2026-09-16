@@ -25,8 +25,10 @@ swiftc \
 	-framework AppKit \
 	-framework CoreGraphics \
 	-framework ApplicationServices \
+	-framework IOKit \
 	-o "$APP/Contents/MacOS/amm" \
 	"$ROOT/Sources/AMM/Settings.swift" \
+	"$ROOT/Sources/AMM/IdleAssertion.swift" \
 	"$ROOT/Sources/AMM/MouseMover.swift" \
 	"$ROOT/Sources/AMM/AppDelegate.swift" \
 	"$ROOT/Sources/AMM/main.swift"
