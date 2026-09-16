@@ -80,8 +80,8 @@ It is the value in parentheses.
 
 ```bash
 xcrun notarytool store-credentials "AMM" \
-    --apple-id "your@email.com" \
-    --team-id "YOURTEAMID" \
+    --apple-id "saulfm08@gmail.com" \
+    --team-id "B3CW6K4QQ3" \
     --password "xxxx-xxxx-xxxx-xxxx"
 ```
 

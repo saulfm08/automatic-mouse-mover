@@ -9,8 +9,8 @@
 #      (see docs/RELEASING.md — it needs a CSR generated on this Mac).
 #   2. A stored notarytool credential profile named "AMM":
 #      xcrun notarytool store-credentials "AMM" \
-#          --apple-id <your-apple-id> \
-#          --team-id <your-team-id> \
+#          --apple-id saulfm08@gmail.com \
+#          --team-id B3CW6K4QQ3 \
 #          --password <app-specific-password>
 #
 # Without these the script stops before producing anything, rather than
@@ -60,8 +60,8 @@ if ! xcrun notarytool history --keychain-profile "$NOTARY_PROFILE" >/dev/null 2>
 
 	Create one with:
 	  xcrun notarytool store-credentials "$NOTARY_PROFILE" \\
-	      --apple-id <your-apple-id> \\
-	      --team-id <your-team-id> \\
+	      --apple-id saulfm08@gmail.com \\
+	      --team-id B3CW6K4QQ3 \\
 	      --password <app-specific-password>
 
 	See docs/RELEASING.md.
